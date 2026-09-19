@@ -3,70 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ارسال پیام به من</title>
+    <title> Beautiful Moon🌙</title>
     <style>
         body {
             font-family: Tahoma, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* پس‌زمینه شب تاریک */
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); 
             height: 100vh;
             margin: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
+            overflow: hidden; /* جلوگیری از اسکرول شدن صفحه وقتی دکمه فرار می‌کند */
         }
+        
+        /* افکت درخشش و حرکت مهتاب */
+        .moon-icon {
+            font-size: 80px;
+            margin: 0 0 20px 0;
+            text-shadow: 0 0 20px #fff, 0 0 40px #f6e58d;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
         .container {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 400px;
             text-align: center;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-family: Tahoma, Arial, sans-serif;
-            font-size: 14px;
+
+        .btn-box {
+            position: relative;
+            height: 60px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
-        textarea {
-            height: 120px;
-            resize: none;
-        }
+
         button {
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-family: Tahoma, Arial, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        #btn-yes {
+            background: #4facfe;
+            color: white;
+        }
+
+        #btn-yes:hover {
+            background: #00f2fe;
+            box-shadow: 0 4px 20px rgba(79, 172, 254, 0.6);
+        }
+
+        #btn-no {
             background: #ff758c;
             color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            font-weight: bold;
+            position: relative; /* برای اینکه بتواند فرار کند */
             transition: 0.3s;
         }
-        button:hover {
-            background: #ff7eb3;
+
+        /* استایل بخش کمره که در ابتدا مخفی است */
+        #camera-section {
+            display: none;
+            text-align: center;
+        }
+        
+        #video-element {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 40px #f6e58d, 0 0 80px #fff;
+            margin-top: 20px;
+            border: 5px solid #fff;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>ارسال نامه ✉️</h2>
-        <p>هر پیامی داری اینجا بنویس، مستقیم یک سال بعد به مه میایه!</p>
+
+    <!-- صفحه اول: سوال و مهتاب متحرک -->
+    <div id="question-section" class="container">
+        <div class="moon-icon">🌕</div>
+        <h2>می‌خواهی زیباترین مهتاب را ببینی؟</h2>
         
-        <form action="https://formsubmit.co/faisal@selenic.io" method="POST">
-            <input type="text" name="name" placeholder="اسمت (اختیاری)">
-            <textarea name="message" placeholder="پیامت را اینجا بنویس..." required></textarea>
-            <input type="hidden" name="_captcha" value="false">
-            <button type="submit">ارسال پیام 🚀</button>
-        </form>
+        <div class="btn-box">
+            <button id="btn-yes">بلی 😍</button>
+            <button id="btn-no">نخیر 😒</button>
+        </div>
     </div>
+
+    <!-- صفحه دوم: نمایش کمره (وقتی بلی را می‌زند) -->
+    <div id="camera-section" class="container">
+        <h2>این هم زیباترین مهتاب! ❤️</h2>
+        <video id="video-element" autoplay playsinline></video>
+    </div>
+
+    <!-- کدهای جادویی (جاوا اسکریپت) برای فرار کردن دکمه و روشن شدن کمره -->
+    <script>
+        const btnNo = document.getElementById("btn-no");
+        const btnYes = document.getElementById("btn-yes");
+        const questionSection = document.getElementById("question-section");
+        const cameraSection = document.getElementById("camera-section");
+        const videoElement = document.getElementById("video-element");
+
+        // فرار کردن دکمه "نخیر" وقتی ماوس روی آن می‌رود
+        btnNo.addEventListener("mouseover", function() {
+            const x = Math.floor(Math.random() * 300) - 150;
+            const y = Math.floor(Math.random() * 300) - 150;
+            btnNo.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        // فرار کردن دکمه "نخیر" وقتی با گوشی روی آن کلیک می‌شود
+        btnNo.addEventListener("click", function() {
+            const x = Math.floor(Math.random() * 300) - 150;
+            const y = Math.floor(Math.random() * 300) - 150;
+            btnNo.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        // وقتی دکمه "بلی" کلیک می‌شود
+        btnYes.addEventListener("click", function() {
+            // مخفی کردن سوال و نمایش بخش کمره
+            questionSection.style.display = "none";
+            cameraSection.style.display = "block";
+
+            // درخواست اجازه برای روشن کردن کمره
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    videoElement.srcObject = stream;
+                })
+                .catch(function(error) {
+                    cameraSection.innerHTML = "<h2>اوه! اجازه دسترسی به کمره را ندادی یا کمره قطع است 😢</h2>";
+                });
+        });
+    </script>
 </body>
 </html>
